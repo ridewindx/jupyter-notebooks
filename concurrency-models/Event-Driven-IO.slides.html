@@ -9,7 +9,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes" />
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
 
-<title>CSP slides</title>
+<title>Event-Driven-IO slides</title>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/require.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
@@ -11859,176 +11859,25 @@ a.anchor-link {
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h1 id="CSP">CSP<a class="anchor-link" href="#CSP">&#182;</a></h1><p><strong>通信顺序进程，Communicating Sequential Process</strong></p>
-
-</div>
-</div>
-</div></section><section>
-<div class="cell border-box-sizing text_cell rendered">
-<div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<ul>
-<li>Tony Hoare, 1977</li>
-<li>A concurrent programming language</li>
-<li>A process calculi/algebra</li>
-</ul>
-
-</div>
-</div>
-</div></section><section>
-<div class="cell border-box-sizing text_cell rendered">
-<div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<ul>
-<li>不关注发送消息的<strong>process（进程/主体）</strong></li>
-<li>关注发送消息时使用的<strong>channel（通道）</strong></li>
-</ul>
-
-</div>
-</div>
-</div></section><section>
-<div class="cell border-box-sizing text_cell rendered">
-<div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<ul>
-<li>process类似于Actor模型中的Actor，channel类似于Mailbox</li>
-<li>channel是一级对象，不与process紧耦合，而Mailbox是绑定至Actor的</li>
-<li>channel可以单独创建和读写，并在process间传递</li>
-<li>process可以没有实体，可以订阅任意个channel或向任意个channel发送消息</li>
-</ul>
-
-</div>
-</div>
-</div></section></section><section><section>
-<div class="cell border-box-sizing text_cell rendered">
-<div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h1 id="Go&#35821;&#35328;&#20013;&#30340;Goroutine&#21644;Channel">Go&#35821;&#35328;&#20013;&#30340;Goroutine&#21644;Channel<a class="anchor-link" href="#Go&#35821;&#35328;&#20013;&#30340;Goroutine&#21644;Channel">&#182;</a></h1><p>CSP模型的一种<strong>语言级</strong>实现（不完全，变体）</p>
-
-</div>
-</div>
-</div></section><section>
-<div class="cell border-box-sizing text_cell rendered">
-<div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<ul>
-<li>消息通过channel在goroutine之间传递</li>
-<li>goroutine是process，是主体/执行体</li>
-<li>channel是通道</li>
-</ul>
-
-</div>
-</div>
-</div></section><section>
-<div class="cell border-box-sizing text_cell rendered">
-<div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>传统进程模型中上下文切换的开销：</p>
-<ul>
-<li>存储和恢复所有寄存器的内容</li>
-<li>刷新TLB cache（改变虚拟地址到物理地址的映射）</li>
-<li>OS调度选择下一个进程</li>
-</ul>
-
-</div>
-</div>
-</div></section><section>
-<div class="cell border-box-sizing text_cell rendered">
-<div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>传统线程模型：</p>
-<ul>
-<li>类似于进程模型</li>
-<li>但共享内存地址空间，上下文切换开销小了一点</li>
-</ul>
-
-</div>
-</div>
-</div></section></section><section><section>
-<div class="cell border-box-sizing text_cell rendered">
-<div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h1 id="Goroutine">Goroutine<a class="anchor-link" href="#Goroutine">&#182;</a></h1>
-</div>
-</div>
-</div></section><section>
-<div class="cell border-box-sizing text_cell rendered">
-<div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<div class="highlight"><pre><span></span><span class="nx">f</span><span class="p">()</span> <span class="c1">// call f(); wait for it to return</span>
-<span class="k">go</span> <span class="nx">f</span><span class="p">()</span> <span class="c1">// create a new goroutine that calls f(); don&#39;t wait</span>
-</pre></div>
-
-</div>
-</div>
-</div></section><section>
-<div class="cell border-box-sizing text_cell rendered">
-<div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<ul>
-<li>可动态增长的栈，初始很小（比如2KB，相比于线程栈典型大小2MB）</li>
-<li>M:N调度，M个goroutine复用N个OS线程</li>
-<li>GOMAXPROCS决定OS线程数</li>
-<li>goroutine没有标识（id）</li>
-</ul>
-
-</div>
-</div>
-</div></section></section><section><section>
-<div class="cell border-box-sizing text_cell rendered">
-<div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="&#35843;&#24230;">&#35843;&#24230;<a class="anchor-link" href="#&#35843;&#24230;">&#182;</a></h2>
-</div>
-</div>
-</div></section><section>
-<div class="cell border-box-sizing text_cell rendered">
-<div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p><strong>协作式调度（cooperative scheduling）</strong>，不同于进程或线程模型的时间分片式或抢占式调度</p>
-<blockquote><p>主动式调度，不同于被动式调度</p>
-<p>知道的更多，因而更优地调度</p>
+<h1 id="&#24322;&#27493;&#12289;&#20107;&#20214;&#39537;&#21160;&#30340;IO">&#24322;&#27493;&#12289;&#20107;&#20214;&#39537;&#21160;&#30340;IO<a class="anchor-link" href="#&#24322;&#27493;&#12289;&#20107;&#20214;&#39537;&#21160;&#30340;IO">&#182;</a></h1><blockquote><p>当今高性能服务器底层采用的主流IO方式</p>
+<p>这里不再讨论基于进程或线程模型的IO</p>
 </blockquote>
 
 </div>
 </div>
-</div></section><section>
+</div></section></section><section><section>
 <div class="cell border-box-sizing text_cell rendered">
 <div class="prompt input_prompt">
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>确定性的调度点：</p>
+<p>单线程的事件循环 Event Loop</p>
 <ul>
-<li>channel的发送和接收操作，如果阻塞</li>
-<li>go语句，尽管新goroutine不一定立即被调度到</li>
-<li>阻塞式的系统调用，如文件/网络IO</li>
-<li>垃圾回收时</li>
+<li>等待事件</li>
+<li>循环处理事件队列中的所有事件</li>
 </ul>
+<p>示例：Nginx的事件循环</p>
+<p><img src="event-loop.png" alt=""></p>
 
 </div>
 </div>
@@ -12038,59 +11887,23 @@ a.anchor-link {
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<ul>
-<li>M:1调度，上下文切换快，但不能有效利用多核</li>
-<li>1:1调度，上下文切换代价太大</li>
-<li>M:N调度，上下文切换快，且能有效利用多核</li>
-</ul>
+<p>每个事件的处理：调用注册的回调函数</p>
+<p>如果一个回调阻塞，则整个事件循环所在的线程被阻塞</p>
+<p><img src="blocking-operation.png" alt=""></p>
 
 </div>
 </div>
-</div></section><section>
+</div>
 <div class="cell border-box-sizing text_cell rendered">
 <div class="prompt input_prompt">
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>M: 线程，P: 调度上下文/调度处理器，G: goroutine（蓝色正运行，灰色待调度）</p>
+<p>一种解决办法：异步回调（比如Node.js)</p>
 <ul>
-<li>P的个数等于GOMAXPROCS</li>
-<li>每个P都有一个runqueue，待调度的goroutine被队列到runqueue</li>
-<li>调度实际上就是P从runqueue取出一个goroutine，切换上下文，并执行它</li>
+<li>将任何可能阻塞的调用都改成非阻塞调用加回调的方式</li>
+<li>容易导致<strong>callback hell</strong></li>
 </ul>
-<p><img src="go-scheduler-in-motion.jpg" alt=""></p>
-
-</div>
-</div>
-</div></section><section>
-<div class="cell border-box-sizing text_cell rendered">
-<div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>当某个goroutine在某个线程上发生阻塞系统调用时：</p>
-<ul>
-<li>调度处理器被卸载掉，并转移到另一个线程上（可以新建，也可以从线程池中取出）</li>
-<li>当原goroutine从阻塞调用返回时，会试图从其它线程“偷”一个调度处理器</li>
-<li>如果“偷”失败了，则将它放入<strong>全局runqueue</strong>，而原线程返回给线程池</li>
-<li>调度处理器会在自己的runqueue为空时和周期检查时，从全局runqueue取出goroutine</li>
-</ul>
-<p><img src="go-scheduler-syscall.jpg" alt=""></p>
-
-</div>
-</div>
-</div></section><section>
-<div class="cell border-box-sizing text_cell rendered">
-<div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<ul>
-<li>如果全局runqueue也为空，则调度处理器会从其它调度处理器“偷”来<strong>一半</strong>数目的goroutine</li>
-</ul>
-<blockquote><p>达成一种“负载均衡”</p>
-</blockquote>
-<p><img src="go-scheduler-steal.jpg" alt=""></p>
 
 </div>
 </div>
@@ -12100,19 +11913,17 @@ a.anchor-link {
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="&#26632;">&#26632;<a class="anchor-link" href="#&#26632;">&#182;</a></h2>
-</div>
-</div>
-</div></section><section>
-<div class="cell border-box-sizing text_cell rendered">
-<div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
+<p>另一种解决办法：<strong>线程池</strong></p>
 <ul>
-<li>进程虚拟地址空间中栈和堆，以及保护页</li>
+<li>将回调的阻塞部分作为一个任务提交给线程池</li>
+<li>线程池执行完成任务后，以事件的方式通知事件循环</li>
+<li>事件循环执行回调的剩余部分</li>
 </ul>
-<p><img src="guard-page.png" alt=""></p>
+<blockquote><p>将阻塞任务“卸载”给任务队列和线程池，</p>
+<p><strong>阻塞式请求</strong>本身仍然被阻塞，</p>
+<p>但其它所有<strong>非阻塞式请求</strong>不再被阻塞</p>
+</blockquote>
+<p><img src="thread-pools-worker-process-event-cycle.png" alt=""></p>
 
 </div>
 </div>
@@ -12122,12 +11933,12 @@ a.anchor-link {
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
+<p>即使使用线程池，能并发处理的<strong>阻塞式请求</strong>的数量还是有限的，等于线程池的大小</p>
+<p>在这种模型或框架下，业务处理能做的优化：</p>
 <ul>
-<li>每个线程都有自己的栈和保护页</li>
-<li>线程栈大小固定，不能太小，也不能太大</li>
-<li>线程越多，则虚拟地址空间被浪费越多</li>
+<li>预估或规定阻塞式请求数量的上限，相应地设置线程池大小</li>
+<li>将阻塞式任务拆分为非阻塞式，比如读文件时，将同步阻塞调用改为，同步非阻塞调用（把fd交给事件循环）</li>
 </ul>
-<p><img src="threads.png" alt=""></p>
 
 </div>
 </div>
@@ -12137,13 +11948,13 @@ a.anchor-link {
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
+<p>依然带来心智负担：</p>
 <ul>
-<li>每个goroutine的栈初始很小（比如2KB），从<strong>heap</strong>分配</li>
-<li>不使用保护页，而是在每个函数调用时检查栈大小是否够用</li>
-<li>如果栈小了，则分配更大的内存，拷贝到新栈，释放原来的栈</li>
-<li>如果栈大了，则一部分会被垃圾回收</li>
+<li>线程池需要设置最小和最大线程数，以及队列最大长度</li>
+<li>任务拆分，需要在拆分后的多个回调间保存状态，还要加上错误处理和超时机制</li>
 </ul>
-<p><img src="goroutine-stack-growth.png" alt=""></p>
+<blockquote><p>处理大并发的阻塞任务简直是噩梦！</p>
+</blockquote>
 
 </div>
 </div>
@@ -12153,671 +11964,33 @@ a.anchor-link {
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h1 id="Channel">Channel<a class="anchor-link" href="#Channel">&#182;</a></h1>
-</div>
-</div>
-</div></section><section>
-<div class="cell border-box-sizing text_cell rendered">
-<div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<div class="highlight"><pre><span></span><span class="nx">ch</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">(</span><span class="kd">chan</span> <span class="kt">int</span><span class="p">)</span> <span class="c1">// 创建channel，收发int类型消息</span>
-
-<span class="nx">ch</span> <span class="o">&lt;-</span> <span class="nx">x</span> <span class="c1">// 发送消息</span>
-<span class="nx">x</span> <span class="p">=</span> <span class="o">&lt;-</span><span class="nx">ch</span> <span class="c1">// 接收并赋值消息</span>
-<span class="o">&lt;-</span><span class="nx">ch</span> <span class="c1">// 接收但丢弃消息</span>
-
-<span class="nb">close</span><span class="p">(</span><span class="nx">ch</span><span class="p">)</span> <span class="c1">// 关闭channel</span>
-</pre></div>
-
-</div>
-</div>
-</div></section><section>
-<div class="cell border-box-sizing text_cell rendered">
-<div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<div class="highlight"><pre><span></span><span class="nx">ch</span> <span class="p">=</span> <span class="nb">make</span><span class="p">(</span><span class="kd">chan</span> <span class="kt">int</span><span class="p">)</span> <span class="c1">// 无缓冲channel</span>
-<span class="nx">ch</span> <span class="p">=</span> <span class="nb">make</span><span class="p">(</span><span class="kd">chan</span> <span class="kt">int</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="c1">// 无缓冲channel</span>
-<span class="nx">ch</span> <span class="p">=</span> <span class="nb">make</span><span class="p">(</span><span class="kd">chan</span> <span class="kt">int</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span> <span class="c1">// 缓冲channel，容量为3</span>
-</pre></div>
-
-</div>
-</div>
-</div></section><section>
-<div class="cell border-box-sizing text_cell rendered">
-<div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p><strong>无缓冲channel</strong>，也称为<strong>同步channel</strong></p>
-<blockquote><p>在无缓冲channel上的一次发送和接收操作</p>
-<p>导致发送和接收goroutine做了一次同步操作</p>
-<p>接收者收到数据发生在唤醒发送者goroutine之前（happens before）</p>
-</blockquote>
-
-</div>
-</div>
-</div></section><section>
-<div class="cell border-box-sizing text_cell rendered">
-<div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p><strong>缓冲channel</strong>，可以看作是<strong>消息队列</strong></p>
-
-</div>
-</div>
-</div><div class="fragment">
-<div class="cell border-box-sizing text_cell rendered">
-<div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p><img src="empty-buffered-channel.png" alt=""></p>
-
-</div>
-</div>
-</div></div><div class="fragment">
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[20]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-go"><pre><span></span><span class="kn">import</span> <span class="p">(</span>
-    <span class="s">&quot;net/http&quot;</span>
-    <span class="s">&quot;time&quot;</span>
-<span class="p">)</span>
-
-<span class="nx">request</span> <span class="o">:=</span> <span class="kd">func</span><span class="p">(</span><span class="nx">url</span> <span class="kt">string</span><span class="p">)</span> <span class="o">*</span><span class="nx">http</span><span class="p">.</span><span class="nx">Response</span> <span class="p">{</span>
-    <span class="nx">rep</span><span class="p">,</span> <span class="nx">_</span> <span class="o">:=</span> <span class="nx">http</span><span class="p">.</span><span class="nx">Get</span><span class="p">(</span><span class="nx">url</span><span class="p">)</span>
-    <span class="k">return</span> <span class="nx">rep</span>
-<span class="p">}</span>
-
-<span class="nx">responses</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">(</span><span class="kd">chan</span> <span class="o">*</span><span class="nx">http</span><span class="p">.</span><span class="nx">Response</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
-<span class="k">go</span> <span class="kd">func</span><span class="p">()</span> <span class="p">{</span> <span class="nx">responses</span> <span class="o">&lt;-</span> <span class="nx">request</span><span class="p">(</span><span class="s">&quot;https://www.baidu.com&quot;</span><span class="p">)</span> <span class="p">}()</span>
-<span class="k">go</span> <span class="kd">func</span><span class="p">()</span> <span class="p">{</span> <span class="nx">responses</span> <span class="o">&lt;-</span> <span class="nx">request</span><span class="p">(</span><span class="s">&quot;https://www.taobao.com&quot;</span><span class="p">)</span> <span class="p">}()</span>
-<span class="k">go</span> <span class="kd">func</span><span class="p">()</span> <span class="p">{</span> <span class="nx">responses</span> <span class="o">&lt;-</span> <span class="nx">request</span><span class="p">(</span><span class="s">&quot;http://www.qq.com&quot;</span><span class="p">)</span> <span class="p">}()</span>
-<span class="k">go</span> <span class="kd">func</span><span class="p">()</span> <span class="p">{</span> <span class="nx">time</span><span class="p">.</span><span class="nx">Sleep</span><span class="p">(</span><span class="mi">100</span><span class="o">*</span><span class="nx">time</span><span class="p">.</span><span class="nx">Millisecond</span><span class="p">);</span> <span class="nb">close</span><span class="p">(</span><span class="nx">responses</span><span class="p">);</span> <span class="p">}()</span>
-
-<span class="k">for</span> <span class="nx">r</span> <span class="o">:=</span> <span class="k">range</span> <span class="nx">responses</span> <span class="p">{</span>
-    <span class="nx">fmt</span><span class="p">.</span><span class="nx">Printf</span><span class="p">(</span><span class="s">&quot;%s: %s\n&quot;</span><span class="p">,</span> <span class="nx">r</span><span class="p">.</span><span class="nx">Request</span><span class="p">.</span><span class="nx">URL</span><span class="p">,</span> <span class="nx">r</span><span class="p">.</span><span class="nx">Status</span><span class="p">)</span>
-<span class="p">}</span>
-</pre></div>
-
-</div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area">
-<div class="prompt output_prompt">Out[20]:</div>
-
-
-
-<div class="output_text output_subarea output_execute_result">
-<pre>http://www.qq.com: 200 OK
-https://www.baidu.com: 200 OK
-https://www.taobao.com: 200 OK
-</pre>
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div></div></section><section>
-<div class="cell border-box-sizing text_cell rendered">
-<div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="&#20018;&#32852;channel&#65288;pipeline&#65289;">&#20018;&#32852;channel&#65288;pipeline&#65289;<a class="anchor-link" href="#&#20018;&#32852;channel&#65288;pipeline&#65289;">&#182;</a></h2>
-</div>
-</div>
-</div><div class="fragment">
-<div class="cell border-box-sizing text_cell rendered">
-<div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p><img src="three-stage-pipeline.png" alt=""></p>
-
-</div>
-</div>
-</div></div><div class="fragment">
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[21]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-go"><pre><span></span><span class="nx">naturals</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">(</span><span class="kd">chan</span> <span class="kt">int</span><span class="p">)</span>
-<span class="nx">squares</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">(</span><span class="kd">chan</span> <span class="kt">int</span><span class="p">)</span>
-
-<span class="c1">// Counter</span>
-<span class="k">go</span> <span class="kd">func</span><span class="p">()</span> <span class="p">{</span>
-    <span class="k">for</span> <span class="nx">x</span> <span class="o">:=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">x</span> <span class="p">&lt;</span> <span class="mi">10</span><span class="p">;</span> <span class="nx">x</span><span class="o">++</span> <span class="p">{</span>
-        <span class="nx">naturals</span> <span class="o">&lt;-</span> <span class="nx">x</span>
-    <span class="p">}</span>
-    <span class="nb">close</span><span class="p">(</span><span class="nx">naturals</span><span class="p">)</span>
-<span class="p">}()</span>
-
-<span class="c1">// Squarer</span>
-<span class="k">go</span> <span class="kd">func</span><span class="p">()</span> <span class="p">{</span>
-    <span class="k">for</span> <span class="nx">x</span> <span class="o">:=</span> <span class="k">range</span> <span class="nx">naturals</span> <span class="p">{</span>
-        <span class="nx">squares</span> <span class="o">&lt;-</span> <span class="nx">x</span> <span class="o">*</span> <span class="nx">x</span>
-    <span class="p">}</span>
-    <span class="nb">close</span><span class="p">(</span><span class="nx">squares</span><span class="p">)</span>
-<span class="p">}()</span>
-
-<span class="c1">// Printer (in main goroutine)</span>
-<span class="k">for</span> <span class="nx">x</span> <span class="o">:=</span> <span class="k">range</span> <span class="nx">squares</span> <span class="p">{</span>
-    <span class="nx">fmt</span><span class="p">.</span><span class="nx">Printf</span><span class="p">(</span><span class="s">&quot;%d &quot;</span><span class="p">,</span> <span class="nx">x</span><span class="p">)</span>
-<span class="p">}</span>
-</pre></div>
-
-</div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area">
-<div class="prompt output_prompt">Out[21]:</div>
-
-
-
-<div class="output_text output_subarea output_execute_result">
-<pre>0 1 4 9 16 25 36 49 64 81 </pre>
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div></div></section><section>
-<div class="cell border-box-sizing text_cell rendered">
-<div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="&#21333;&#21521;channel">&#21333;&#21521;channel<a class="anchor-link" href="#&#21333;&#21521;channel">&#182;</a></h2><ul>
-<li>只能发送：<code>chan&lt;- int</code></li>
-<li>只能接收：<code>&lt;-chan int</code></li>
+<p>更优雅的解决方法：执行体不再是线程，而是<strong>轻量级线程/协程/绿色线程</strong></p>
+<p>编程视角：</p>
+<ul>
+<li>同步IO：降低编程难度</li>
+<li>尽可能多的执行体：提供大并发IO</li>
+</ul>
+<p>要求：</p>
+<ul>
+<li>更少的资源占用</li>
+<li>接近于函数调用的上下文切换成本</li>
 </ul>
 
 </div>
 </div>
-</div><div class="fragment">
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[22]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-go"><pre><span></span><span class="nx">counter</span> <span class="o">:=</span> <span class="kd">func</span><span class="p">(</span><span class="nx">out</span> <span class="kd">chan</span><span class="o">&lt;-</span> <span class="kt">int</span><span class="p">)</span> <span class="p">{</span>
-    <span class="k">for</span> <span class="nx">x</span> <span class="o">:=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">x</span> <span class="p">&lt;</span> <span class="mi">10</span><span class="p">;</span> <span class="nx">x</span><span class="o">++</span> <span class="p">{</span>
-        <span class="nx">out</span> <span class="o">&lt;-</span> <span class="nx">x</span>
-    <span class="p">}</span>
-    <span class="nb">close</span><span class="p">(</span><span class="nx">out</span><span class="p">)</span>
-<span class="p">}</span>
-
-<span class="nx">squarer</span> <span class="o">:=</span> <span class="kd">func</span><span class="p">(</span><span class="nx">out</span> <span class="kd">chan</span><span class="o">&lt;-</span> <span class="kt">int</span><span class="p">,</span> <span class="nx">in</span> <span class="o">&lt;-</span><span class="kd">chan</span> <span class="kt">int</span><span class="p">)</span> <span class="p">{</span>
-    <span class="k">for</span> <span class="nx">v</span> <span class="o">:=</span> <span class="k">range</span> <span class="nx">in</span> <span class="p">{</span>
-        <span class="nx">out</span> <span class="o">&lt;-</span> <span class="nx">v</span> <span class="o">*</span> <span class="nx">v</span>
-    <span class="p">}</span>
-    <span class="nb">close</span><span class="p">(</span><span class="nx">out</span><span class="p">)</span>
-<span class="p">}</span>
-
-<span class="nx">printer</span> <span class="o">:=</span> <span class="kd">func</span><span class="p">(</span><span class="nx">in</span> <span class="o">&lt;-</span><span class="kd">chan</span> <span class="kt">int</span><span class="p">)</span> <span class="p">{</span>
-    <span class="k">for</span> <span class="nx">v</span> <span class="o">:=</span> <span class="k">range</span> <span class="nx">in</span> <span class="p">{</span>
-        <span class="nx">fmt</span><span class="p">.</span><span class="nx">Printf</span><span class="p">(</span><span class="s">&quot;%d &quot;</span><span class="p">,</span> <span class="nx">v</span><span class="p">)</span>
-    <span class="p">}</span>
-<span class="p">}</span>
-
-<span class="nx">naturals</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">(</span><span class="kd">chan</span> <span class="kt">int</span><span class="p">)</span>
-<span class="nx">squares</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">(</span><span class="kd">chan</span> <span class="kt">int</span><span class="p">)</span>
-<span class="k">go</span> <span class="nx">counter</span><span class="p">(</span><span class="nx">naturals</span><span class="p">)</span>
-<span class="k">go</span> <span class="nx">squarer</span><span class="p">(</span><span class="nx">squares</span><span class="p">,</span> <span class="nx">naturals</span><span class="p">)</span>
-<span class="nx">printer</span><span class="p">(</span><span class="nx">squares</span><span class="p">)</span>
-</pre></div>
-
-</div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area">
-<div class="prompt output_prompt">Out[22]:</div>
-
-
-
-<div class="output_text output_subarea output_execute_result">
-<pre>0 1 4 9 16 25 36 49 64 81 </pre>
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div></div></section><section>
+</div></section><section>
 <div class="cell border-box-sizing text_cell rendered">
 <div class="prompt input_prompt">
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="&#22810;&#36335;&#22797;&#29992;&#65306;select">&#22810;&#36335;&#22797;&#29992;&#65306;select<a class="anchor-link" href="#&#22810;&#36335;&#22797;&#29992;&#65306;select">&#182;</a></h2>
-</div>
-</div>
-</div><div class="fragment">
-<div class="cell border-box-sizing text_cell rendered">
-<div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<div class="highlight"><pre><span></span><span class="k">select</span> <span class="p">{</span>
-<span class="k">case</span> <span class="o">&lt;-</span><span class="nx">ch1</span><span class="p">:</span> <span class="c1">// 接收并丢弃</span>
-<span class="c1">// ...</span>
-<span class="k">case</span> <span class="nx">x</span> <span class="o">:=</span> <span class="o">&lt;-</span><span class="nx">ch2</span><span class="p">:</span> <span class="c1">// 接收</span>
-<span class="c1">// ...use x...</span>
-<span class="k">case</span> <span class="nx">ch3</span> <span class="o">&lt;-</span> <span class="nx">y</span><span class="p">:</span> <span class="c1">// 发送</span>
-<span class="c1">// ...</span>
-<span class="k">default</span><span class="p">:</span> <span class="c1">// 不阻塞，可以用于实现轮询channel</span>
-<span class="c1">// ...</span>
-<span class="p">}</span>
-</pre></div>
-
-</div>
-</div>
-</div></div></section><section>
-<div class="cell border-box-sizing text_cell rendered">
-<div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>一发一收，依次执行</p>
-
-</div>
-</div>
-</div><div class="fragment">
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[23]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-go"><pre><span></span><span class="nx">ch</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">(</span><span class="kd">chan</span> <span class="kt">int</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
-<span class="k">for</span> <span class="nx">i</span> <span class="o">:=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="p">&lt;</span> <span class="mi">10</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span> <span class="p">{</span>
-    <span class="k">select</span> <span class="p">{</span>
-    <span class="k">case</span> <span class="nx">x</span> <span class="o">:=</span> <span class="o">&lt;-</span><span class="nx">ch</span><span class="p">:</span>
-        <span class="nx">fmt</span><span class="p">.</span><span class="nx">Printf</span><span class="p">(</span><span class="s">&quot;%d &quot;</span><span class="p">,</span> <span class="nx">x</span><span class="p">)</span> <span class="c1">// &quot;0&quot; &quot;2&quot; &quot;4&quot; &quot;6&quot; &quot;8&quot;</span>
-    <span class="k">case</span> <span class="nx">ch</span> <span class="o">&lt;-</span> <span class="nx">i</span><span class="p">:</span>
-    <span class="p">}</span>
-<span class="p">}</span>
-</pre></div>
-
-</div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area">
-<div class="prompt output_prompt">Out[23]:</div>
-
-
-
-<div class="output_text output_subarea output_execute_result">
-<pre>0 2 4 6 8 </pre>
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div></div></section><section>
-<div class="cell border-box-sizing text_cell rendered">
-<div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>当多个分支同时满足时，<strong>随机</strong>选择一个分支执行</p>
-
-</div>
-</div>
-</div><div class="fragment">
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[24]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-go"><pre><span></span><span class="nx">ch</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">(</span><span class="kd">chan</span> <span class="kt">int</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
-<span class="k">for</span> <span class="nx">i</span> <span class="o">:=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="p">&lt;</span> <span class="mi">10</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span> <span class="p">{</span>
-    <span class="k">select</span> <span class="p">{</span>
-    <span class="k">case</span> <span class="nx">x</span> <span class="o">:=</span> <span class="o">&lt;-</span><span class="nx">ch</span><span class="p">:</span>
-        <span class="nx">fmt</span><span class="p">.</span><span class="nx">Printf</span><span class="p">(</span><span class="s">&quot;%d &quot;</span><span class="p">,</span> <span class="nx">x</span><span class="p">)</span> <span class="c1">// &quot;0&quot; &quot;2&quot; &quot;4&quot; &quot;6&quot; &quot;8&quot;</span>
-    <span class="k">case</span> <span class="nx">ch</span> <span class="o">&lt;-</span> <span class="nx">i</span><span class="p">:</span>
-    <span class="p">}</span>
-<span class="p">}</span>
-</pre></div>
-
-</div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area">
-<div class="prompt output_prompt">Out[24]:</div>
-
-
-
-<div class="output_text output_subarea output_execute_result">
-<pre>0 1 3 6 7 </pre>
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div></div></section><section>
-<div class="cell border-box-sizing text_cell rendered">
-<div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>非阻塞，轮询（从来不应该这么用）</p>
-
-</div>
-</div>
-</div><div class="fragment">
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[1]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-go"><pre><span></span><span class="kn">import</span> <span class="p">(</span>
-    <span class="s">&quot;time&quot;</span>
-<span class="p">)</span>
-
-<span class="kd">func</span><span class="p">()</span> <span class="p">{</span>
-    <span class="nx">ch</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">(</span><span class="kd">chan</span> <span class="kt">uint64</span><span class="p">)</span>
-
-    <span class="k">go</span> <span class="kd">func</span><span class="p">()</span> <span class="p">{</span>
-        <span class="nx">ch</span> <span class="o">&lt;-</span> <span class="mi">1</span>
-        <span class="nx">ch</span> <span class="o">&lt;-</span> <span class="mi">1</span>
-    <span class="p">}()</span>
-
-    <span class="k">go</span> <span class="kd">func</span><span class="p">()</span> <span class="p">{</span>
-        <span class="nx">ch</span> <span class="o">&lt;-</span> <span class="mi">1</span>
-        <span class="nx">ch</span> <span class="o">&lt;-</span> <span class="mi">1</span>
-    <span class="p">}()</span>
-
-    <span class="kd">var</span> <span class="nx">count</span> <span class="kt">uint64</span>
-    <span class="k">for</span> <span class="p">{</span>
-        <span class="k">select</span> <span class="p">{</span>
-        <span class="k">case</span> <span class="nx">x</span> <span class="o">:=</span> <span class="o">&lt;-</span><span class="nx">ch</span><span class="p">:</span>
-            <span class="nx">count</span> <span class="o">+=</span> <span class="nx">x</span>
-            <span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="nx">count</span><span class="p">)</span>
-            <span class="k">if</span> <span class="nx">count</span> <span class="o">==</span> <span class="mi">4</span> <span class="p">{</span>
-                <span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="s">&quot;Bye&quot;</span><span class="p">)</span>
-                <span class="k">return</span>
-            <span class="p">}</span>
-        <span class="k">default</span><span class="p">:</span>
-            <span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="s">&quot;poll&quot;</span><span class="p">)</span>
-            <span class="nx">time</span><span class="p">.</span><span class="nx">Sleep</span><span class="p">(</span><span class="mi">300</span><span class="o">*</span><span class="nx">time</span><span class="p">.</span><span class="nx">Nanosecond</span><span class="p">)</span>
-        <span class="p">}</span>
-    <span class="p">}</span>
-<span class="p">}()</span>
-</pre></div>
-
-</div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area">
-<div class="prompt output_prompt">Out[1]:</div>
-
-
-
-<div class="output_text output_subarea output_execute_result">
-<pre>poll
-poll
-poll
-1
-2
-poll
-poll
-3
-4
-Bye
-</pre>
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div></div></section><section>
-<div class="cell border-box-sizing text_cell rendered">
-<div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>实现请求的超时机制</p>
-
-</div>
-</div>
-</div><div class="fragment">
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[26]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-go"><pre><span></span><span class="kn">import</span> <span class="p">(</span>
-    <span class="s">&quot;net/http&quot;</span>
-    <span class="s">&quot;time&quot;</span>
-<span class="p">)</span>
-
-<span class="nx">request</span> <span class="o">:=</span> <span class="kd">func</span><span class="p">(</span><span class="nx">url</span> <span class="kt">string</span><span class="p">)</span> <span class="o">*</span><span class="nx">http</span><span class="p">.</span><span class="nx">Response</span> <span class="p">{</span>
-    <span class="nx">rep</span><span class="p">,</span> <span class="nx">_</span> <span class="o">:=</span> <span class="nx">http</span><span class="p">.</span><span class="nx">Get</span><span class="p">(</span><span class="nx">url</span><span class="p">)</span>
-    <span class="k">return</span> <span class="nx">rep</span>
-<span class="p">}</span>
-
-<span class="nx">responses</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">(</span><span class="kd">chan</span> <span class="o">*</span><span class="nx">http</span><span class="p">.</span><span class="nx">Response</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
-<span class="k">go</span> <span class="kd">func</span><span class="p">()</span> <span class="p">{</span> <span class="nx">responses</span> <span class="o">&lt;-</span> <span class="nx">request</span><span class="p">(</span><span class="s">&quot;https://www.baidu.com&quot;</span><span class="p">)</span> <span class="p">}()</span>
-<span class="k">go</span> <span class="kd">func</span><span class="p">()</span> <span class="p">{</span> <span class="nx">responses</span> <span class="o">&lt;-</span> <span class="nx">request</span><span class="p">(</span><span class="s">&quot;https://www.taobao.com&quot;</span><span class="p">)</span> <span class="p">}()</span>
-<span class="k">go</span> <span class="kd">func</span><span class="p">()</span> <span class="p">{</span> <span class="nx">responses</span> <span class="o">&lt;-</span> <span class="nx">request</span><span class="p">(</span><span class="s">&quot;http://www.qq.com&quot;</span><span class="p">)</span> <span class="p">}()</span>
-
-<span class="k">go</span> <span class="kd">func</span><span class="p">()</span> <span class="p">{</span>
-    <span class="k">select</span> <span class="p">{</span>
-        <span class="k">case</span> <span class="o">&lt;-</span><span class="nx">time</span><span class="p">.</span><span class="nx">After</span><span class="p">(</span><span class="mi">100</span><span class="o">*</span><span class="nx">time</span><span class="p">.</span><span class="nx">Millisecond</span><span class="p">):</span> <span class="c1">// 100毫秒超时</span>
-        <span class="nb">close</span><span class="p">(</span><span class="nx">responses</span><span class="p">)</span>
-    <span class="p">}</span>
-<span class="p">}()</span>
-
-<span class="kd">func</span><span class="p">()</span> <span class="p">{</span>
-    <span class="k">for</span> <span class="p">{</span>
-        <span class="k">select</span> <span class="p">{</span>
-        <span class="k">case</span> <span class="nx">r</span> <span class="o">:=</span> <span class="o">&lt;-</span><span class="nx">responses</span><span class="p">:</span>
-            <span class="k">if</span> <span class="nx">r</span> <span class="o">==</span> <span class="kc">nil</span> <span class="p">{</span>
-                <span class="k">return</span>
-            <span class="p">}</span>
-            <span class="nx">fmt</span><span class="p">.</span><span class="nx">Printf</span><span class="p">(</span><span class="s">&quot;%s: %s\n&quot;</span><span class="p">,</span> <span class="nx">r</span><span class="p">.</span><span class="nx">Request</span><span class="p">.</span><span class="nx">URL</span><span class="p">,</span> <span class="nx">r</span><span class="p">.</span><span class="nx">Status</span><span class="p">)</span>
-        <span class="p">}</span>
-    <span class="p">}</span>
-<span class="p">}()</span>
-</pre></div>
-
-</div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area">
-<div class="prompt output_prompt">Out[26]:</div>
-
-
-
-<div class="output_text output_subarea output_execute_result">
-<pre>http://www.qq.com: 200 OK
-https://www.taobao.com: 200 OK
-https://www.baidu.com: 200 OK
-</pre>
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div></div></section><section>
-<div class="cell border-box-sizing text_cell rendered">
-<div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="&#24191;&#25773;&#24182;&#21457;&#36864;&#20986;&#65306;&#20851;&#38381;channel">&#24191;&#25773;&#24182;&#21457;&#36864;&#20986;&#65306;&#20851;&#38381;channel<a class="anchor-link" href="#&#24191;&#25773;&#24182;&#21457;&#36864;&#20986;&#65306;&#20851;&#38381;channel">&#182;</a></h2>
-</div>
-</div>
-</div><div class="fragment">
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[27]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-go"><pre><span></span><span class="kn">import</span> <span class="s">&quot;time&quot;</span>
-
-<span class="nx">ch</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">(</span><span class="kd">chan</span> <span class="kt">int</span><span class="p">)</span>
-
-<span class="k">go</span> <span class="kd">func</span><span class="p">()</span> <span class="p">{</span>
-    <span class="nx">ch</span> <span class="o">&lt;-</span> <span class="mi">1</span>
-    <span class="nx">ch</span> <span class="o">&lt;-</span> <span class="mi">2</span>
-<span class="p">}()</span>
-
-<span class="k">go</span> <span class="kd">func</span><span class="p">()</span> <span class="p">{</span>
-    <span class="nx">ch</span> <span class="o">&lt;-</span> <span class="mi">3</span>
-    <span class="nx">ch</span> <span class="o">&lt;-</span> <span class="mi">4</span>
-<span class="p">}()</span>
-
-<span class="k">go</span> <span class="kd">func</span><span class="p">()</span> <span class="p">{</span>
-    <span class="nx">time</span><span class="p">.</span><span class="nx">Sleep</span><span class="p">(</span><span class="mi">10</span><span class="o">*</span><span class="nx">time</span><span class="p">.</span><span class="nx">Millisecond</span><span class="p">)</span>
-    <span class="nb">close</span><span class="p">(</span><span class="nx">ch</span><span class="p">)</span>
-<span class="p">}()</span>
-
-<span class="nx">print</span> <span class="o">:=</span> <span class="kd">func</span><span class="p">()</span> <span class="p">{</span>
-    <span class="nx">FOR</span><span class="p">:</span>
-    <span class="k">for</span> <span class="p">{</span>
-        <span class="k">select</span> <span class="p">{</span>
-        <span class="k">case</span> <span class="nx">x</span> <span class="o">:=</span> <span class="o">&lt;-</span><span class="nx">ch</span><span class="p">:</span>
-            <span class="k">if</span> <span class="nx">x</span> <span class="o">==</span> <span class="mi">0</span> <span class="p">{</span>
-                <span class="nx">fmt</span><span class="p">.</span><span class="nx">Printf</span><span class="p">(</span><span class="s">&quot;Bye\n&quot;</span><span class="p">)</span>
-                <span class="k">break</span> <span class="nx">FOR</span>
-            <span class="p">}</span>
-            <span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="nx">x</span><span class="p">)</span>
-        <span class="p">}</span>
-    <span class="p">}</span>
-<span class="p">}</span>
-
-<span class="k">go</span> <span class="nb">print</span><span class="p">()</span>
-<span class="k">go</span> <span class="nb">print</span><span class="p">()</span>
-
-<span class="nx">time</span><span class="p">.</span><span class="nx">Sleep</span><span class="p">(</span><span class="mi">100</span><span class="o">*</span><span class="nx">time</span><span class="p">.</span><span class="nx">Millisecond</span><span class="p">)</span>
-</pre></div>
-
-</div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area">
-<div class="prompt output_prompt">Out[27]:</div>
-
-
-
-<div class="output_text output_subarea output_execute_result">
-<pre>1
-3
-4
-2
-Bye
-Bye
-</pre>
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div></div></section></section><section><section>
-<div class="cell border-box-sizing text_cell rendered">
-<div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h1 id="&#24635;&#32467;">&#24635;&#32467;<a class="anchor-link" href="#&#24635;&#32467;">&#182;</a></h1>
-</div>
-</div>
-</div><div class="fragment">
-<div class="cell border-box-sizing text_cell rendered">
-<div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>简单，只有goroutine和channel</p>
-
-</div>
-</div>
-</div></div><div class="fragment">
-<div class="cell border-box-sizing text_cell rendered">
-<div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>强大，灵活运用goroutine和channel，搭配原子变量/互斥体/同步设施/条件变量，<strong>才能</strong>写出千变万化的并发程序</p>
-
-</div>
-</div>
-</div></div><div class="fragment">
-<div class="cell border-box-sizing text_cell rendered">
-<div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>依然是那句老话，高级抽象减少心智负担，但是<strong>从来没有银弹！</strong></p>
+<p>轻量级线程/协程/绿色线程在很多实现中底层依然使用了事件循环</p>
+<blockquote><p>漂亮优雅地封装了脏活累活</p>
+</blockquote>
 
 </div>
 </div>
-</div></div></section></section>
+</div></section></section>
 </div>
 </div>
 
